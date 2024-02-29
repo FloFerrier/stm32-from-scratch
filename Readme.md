@@ -63,3 +63,63 @@ Need build test suite before code coverage generation.
 ```bash
 $ cmake --build build/Test --target coverage # Generate code coverage report
 ```
+
+## Code profiling
+### Memory mapping
+To display section memory footprint:
+```bash
+$ find -iname "*.elf"
+$ arm-none-eabi-size -A -x /path-to-find-firmware.elf
+../path-to-find-firmware.elf:
+section             size         addr
+.isr_vector         0x2c    0x8000000
+.text              0x118    0x800002c
+.init                0x4    0x8000144
+.fini                0x4    0x8000148
+.rodata              0x0    0x800014c
+.bss                 0x4   0x20000000
+.data                0x0   0x20000004
+.stack             0x604   0x20000004
+.ARM.attributes     0x30          0x0
+.comment            0x44          0x0
+.debug_info        0x57f          0x0
+.debug_abbrev      0x340          0x0
+.debug_loclists     0xb6          0x0
+.debug_aranges      0xb0          0x0
+.debug_rnglists     0x7c          0x0
+.debug_line        0x689          0x0
+.debug_str         0x38f          0x0
+.debug_frame        0xf0          0x0
+Total             0x1d71
+```
+Add linker flag ***-Wl,--print-memory-usage*** to display this :
+```bash
+Memory region         Used Size  Region Size  %age Used
+             RAM:        1544 B       128 KB      1.18%
+             ROM:         332 B       512 KB      0.06%
+```
+To have more detail, need generate map file on compilation with linker flag ***-Wl,-Map=output.map,--cref***.
+```bash
+$ find -iname "output.map"
+```
+This file is illisible for human, so you can use **fpvgcc** to display infos :
+```bash
+$ pip3 install fpvgcc
+$ fpvgcc --sar /path-to-find/output.map
++----------------+-----+-----+-----+-------+
+| FILE           | VEC | ROM | RAM | TOTAL |
++----------------+-----+-----+-----+-------+
+| startup.c.obj  |     | 136 | 512 |   648 |
+| user_led.c.obj |     | 104 |     |   104 |
+| delay.c.obj    |     |  48 |   4 |    52 |
+| main.c.obj     |     |  36 |     |    36 |
+| crti.o         |     |   8 |     |     8 |
+| TOTALS         |   0 | 332 | 516 |       |
++----------------+-----+-----+-----+-------+
+```
+Or with **puncover**
+```bash
+$ pip3 install puncover
+$ puncover --elf-file /path-to-find-firmware.elf
+```
+Open a browser to see code source.
