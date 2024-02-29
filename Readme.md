@@ -36,6 +36,16 @@ $ renode --version
 $ pip3 install -r tests/requirements.txt
 ```
 ## Build the firmware
+### As Debug
+```bash
+$ mkdir renode
+$ tar xf renode-*.linux-portable.tar.gz -C renode --strip-components=1
+$ cd renode
+$ export PATH="`pwd`:$PATH"
+$ renode --version
+$ pip3 install -r tests/requirements.txt
+```
+## Build the firmware
 ```bash
 $ cmake -B build/<Debug or Release> -DCMAKE_BUILD_TYPE=<Debug or Release> # Create workspace
 $ cmake --build build/<Debug or Release> # Build
