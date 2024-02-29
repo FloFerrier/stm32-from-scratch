@@ -44,12 +44,13 @@ $ openocd -f config/nucleo-f446re.cfg -c "setup" -c "program_release bin/firmwar
 $ openocd -f config/nucleo-f446re.cfg -c "setup" -c "program_debug bin/firmware_Debug.elf"
 ```
 ```bash
-$ gdb-multiarch --tui build/firmware_Debug.elf
+$ gdb-multiarch --tui bin/firmware_Debug.elf
 (gdb) target extended-remote localhost:3333
 (gdb) monitor reset halt
 (gdb) load
 (gdb) break main
-(gdb) next # Debug line per line
+(gdb) step
+(gdb) next
 (gdb) continue
 ```
 ## Build test suite
@@ -123,3 +124,37 @@ $ pip3 install puncover
 $ puncover --elf-file /path-to-find-firmware.elf
 ```
 Open a browser to see code source.
+
+### Function Timing
+#### Prerequisites
+Download code source from Orbuculum github repository.
+```bash
+$ mkdir Orbuculum
+$ sudo apt install libusb-1.0-0 libusb-1.0-0-dev libczmq-dev libelf-dev libcapstone-dev libsdl2-2.0-0 libsdl2-dev libncurses-dev meson ncurses-base ninja-build pkg-config
+$ tar xf orbuculum-2.1.0.tar.gz -C .
+$ cd orbuculum-2.1.0
+$ meson setup build
+$ ninja -C build
+$ echo "export PATH=\$PATH:Orbuculum/orbucul-2.1.0/build" >> .bashrc
+$ source ./bashrc
+$ orbuculum --version
+```
+And need to build on Debug mode for using SWV.
+#### PC Sampling information
+Open a debug session with the hardware:
+```bash
+$ openocd -f config/nucleo-f446re.cfg -c "setup" -c "program_debug bin/firmware_Debug.elf"
+```
+Open gdb and as follow:
+```bash
+$ gdb-multiarch --tui bin/firmware_Debug.elf
+(gdb) target extended-remote localhost:3333
+(gdb) monitor reset halt
+(gdb) load
+(gdb) monitor mww 0xE0001000 0x17ff # PC Sampling enable
+(gdb) continue
+```
+Finally, to have PC Sampling information with Orbuculum tool:
+```bash
+$ orbtop -s localhost:3443 -e bin/firmware_Debug.elf
+```
