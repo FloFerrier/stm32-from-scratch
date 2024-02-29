@@ -25,6 +25,16 @@ $ ./configure
 $ sudo make install
 $ openocd --version
 ```
+### Emulator
+Download the package from Renode github repository.
+```bash
+$ mkdir renode
+$ tar xf renode-*.linux-portable.tar.gz -C renode --strip-components=1
+$ cd renode
+$ export PATH="`pwd`:$PATH"
+$ renode --version
+$ pip3 install -r tests/requirements.txt
+```
 ## Build the firmware
 ```bash
 $ cmake -B build/<Debug or Release> -DCMAKE_BUILD_TYPE=<Debug or Release> # Create workspace
@@ -50,6 +60,29 @@ $ gdb-multiarch --tui build/firmware_Debug.elf
 (gdb) load
 (gdb) break main
 (gdb) next # Debug line per line
+(gdb) continue
+```
+## Use emulator
+```bash
+$ renode config/nucleo-f446re.resc
+(machine-0) logFile @/tmp/function-trace.log
+(machine-0) logLevel -1
+(machine-0) machine StartGdbServer 3333
+(machine-0) start
+(machine-0) pause
+(machine-0) sysbus.cpu PC
+(machine-0) sysbus.cpu LogFunctionNames true
+(machine-0) machine GetTimeSourceInfo
+(machine-0) machine EnableProfiler
+(machine-0) quit
+```
+```bash
+$ gdb-multiarch
+(gdb) target extended-remote localhost:3333
+(gdb) file bin/firmware_Debug.elf
+(gdb) load
+(gdb) monitor start
+(gdb) monitor halt
 (gdb) continue
 ```
 ## Build test suite
