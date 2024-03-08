@@ -125,7 +125,7 @@ $ puncover --elf-file /path-to-find-firmware.elf
 ```
 Open a browser to see code source.
 
-### Function Timing
+### Time Profiling
 #### Prerequisites
 Download code source from Orbuculum github repository.
 ```bash
@@ -140,7 +140,8 @@ $ source ./bashrc
 $ orbuculum --version
 ```
 And need to build on Debug mode for using SWV.
-#### PC Sampling information
+#### CPU Load
+To have a CPU load estimation, PC sampling events are setting.
 Open a debug session with the hardware:
 ```bash
 $ openocd -f config/nucleo-f446re.cfg -c "setup" -c "program_debug bin/firmware_Debug.elf"
@@ -151,10 +152,29 @@ $ gdb-multiarch --tui bin/firmware_Debug.elf
 (gdb) target extended-remote localhost:3333
 (gdb) monitor reset halt
 (gdb) load
-(gdb) monitor mww 0xE0001000 0x17ff # PC Sampling enable
+(gdb) monitor mww 0xE0001000 0x00091011 # PC sampling and Exception Trace
+(gdb) monitor itm port 0 on
 (gdb) continue
 ```
-Finally, to have PC Sampling information with Orbuculum tool:
+Finally, to have information with Orbuculum tool:
 ```bash
-$ orbtop -s localhost:3443 -e bin/firmware_Debug.elf
+$ orbtop -E -s localhost:3443 -e bin/firmware_Debug.elf
+```
+#### CPU Cycle Monitoring
+To have a cycle count, use SWM stimulus port 0 to display information with printf.
+Open a debug session with the hardware:
+```bash
+$ openocd -f config/nucleo-f446re.cfg -c "setup" -c "program_debug bin/firmware_Debug.elf"
+```
+Open gdb and as follow:
+```bash
+$ gdb-multiarch --tui bin/firmware_Debug.elf
+(gdb) target extended-remote localhost:3333
+(gdb) monitor reset halt
+(gdb) load
+(gdb) monitor itm port 0 on
+(gdb) continue
+```
+```bash
+$ orbcat -C 16000 -s localhost:3443 -c 0,"%c"
 ```
