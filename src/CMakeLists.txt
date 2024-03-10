@@ -3,8 +3,6 @@ set(BUILD_TARGET firmware_${CMAKE_BUILD_TYPE} CACHE STRING "")
 add_executable(${BUILD_TARGET}
     startup.c
     main.c
-    user_led.c
-    delay.c
 )
 
 target_compile_options(${BUILD_TARGET} PRIVATE
@@ -16,6 +14,8 @@ target_link_options(${BUILD_TARGET} PRIVATE
     -T${LINKER_FILE}
     --specs=nosys.specs
     --specs=nano.specs
+    --specs=rdimon.specs
+    -lrdimon
     -Wl,-Map=output.map,--cref
     -Wl,--print-memory-usage
 )

@@ -3,7 +3,7 @@
 Test on Ubuntu 22.04 distribution.
 ### Toolchain
 ```bash
-$ sudo apt install build-essential cmake gdb-multiarch lcov make
+$ sudo apt install build-essential cmake gdb-multiarch lcov make qemu qemu-system-arm
 ```
 Download the package from [ARM-Website](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads) (need 13.2rel1 version).
 ```bash
@@ -44,7 +44,7 @@ $ openocd -f config/nucleo-f446re.cfg -c "setup" -c "program_release bin/firmwar
 $ openocd -f config/nucleo-f446re.cfg -c "setup" -c "program_debug bin/firmware_Debug.elf"
 ```
 ```bash
-$ gdb-multiarch --tui build/firmware_Debug.elf
+$ gdb-multiarch bin/firmware_Debug.elf
 (gdb) target extended-remote localhost:3333
 (gdb) monitor reset halt
 (gdb) load
@@ -52,14 +52,8 @@ $ gdb-multiarch --tui build/firmware_Debug.elf
 (gdb) next # Debug line per line
 (gdb) continue
 ```
-## Build test suite
+## Emulator with Qemu
 ```bash
-$ cmake -B build/Test -DCMAKE_BUILD_TYPE=Test
-$ cmake --build build/Test
-$ ctest -V --test-dir build/Test # Run all tests with verbose output
+$ qemu-system-arm -cpu cortex-m3 -machine stm32vldiscovery -gdb tcp::3333 -S -nographic -semihosting -kernel bin/firmware_Debug.elf
 ```
-## Show code coverage
-Need build test suite before code coverage generation.
-```bash
-$ cmake --build build/Test --target coverage # Generate code coverage report
-```
+Then, open a debug session.

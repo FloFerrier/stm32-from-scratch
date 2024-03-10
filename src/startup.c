@@ -2,7 +2,7 @@
 #include "main.h"
 
 #define RAM_START 0x20000000u
-#define RAM_SIZE (128u * 1024u) // 128K
+#define RAM_SIZE (8u * 1024u) // 8K
 #define RAM_END (RAM_START + RAM_SIZE)
 #define STACK_START RAM_END
 
