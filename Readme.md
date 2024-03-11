@@ -54,9 +54,10 @@ $ openocd -f config/nucleo-f446re.cfg -c "setup" -c "program_release bin/firmwar
 $ openocd -f config/nucleo-f446re.cfg -c "setup" -c "program_debug bin/firmware_Debug.elf"
 ```
 ```bash
-$ gdb-multiarch --tui build/firmware_Debug.elf
+$ gdb-multiarch --tui bin/firmware_Debug.elf
 (gdb) target extended-remote localhost:3333
 (gdb) monitor reset halt
+(gdb) monitor arm semihosting enable
 (gdb) load
 (gdb) break main
 (gdb) next # Debug line per line

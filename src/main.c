@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <stdio.h>
 #include "main.h"
 
 #ifndef UTEST
@@ -16,12 +17,16 @@
 
 extern volatile uint32_t systick_counter;
 
+extern void initialise_monitor_handles(void);
+
 /* Blink User Led on Nucleo-f446re board
  * User Led = GPIOA5
  */
 int MAIN(void) {
 
 	/* After reset, the CPU clock frequency is 16MHz */
+
+	initialise_monitor_handles(); /* semihosting setup */
 
     STK_CTRL |= 0x00000007;
     STK_RELOAD = 16000u; // each 1 ms

@@ -16,6 +16,8 @@ target_link_options(${BUILD_TARGET} PRIVATE
     -T${LINKER_FILE}
     --specs=nosys.specs
     --specs=nano.specs
+    --specs=rdimon.specs
+    -lrdimon
     -Wl,-Map=output.map,--cref
     -Wl,--print-memory-usage
 )
