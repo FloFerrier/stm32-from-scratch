@@ -1,6 +1,9 @@
 # Ignore files by git
 build
 bin
+rtos/FreeRTOS
+hal/CMSIS/Device
+hal/STM32_HAL_Driver
 test/functional/__pycache__
 test/functional/.pytest_cache
 Testing

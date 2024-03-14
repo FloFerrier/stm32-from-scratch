@@ -21,6 +21,8 @@ set(LINKER_FILE ${CMAKE_CURRENT_SOURCE_DIR}/config/stm32vldiscovery.ld)
 set(OPENOCD_CFG_FILE ${CMAKE_CURRENT_SOURCE_DIR}/config/stm32vldiscovery.cfg)
 
 if(CMAKE_BUILD_TYPE STREQUAL Debug OR CMAKE_BUILD_TYPE STREQUAL Release)
+    add_subdirectory(hal)
+    add_subdirectory(rtos)
     add_subdirectory(src)
 elseif(CMAKE_BUILD_TYPE STREQUAL Test)
     include(CTest)
