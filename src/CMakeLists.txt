@@ -1,8 +1,12 @@
 set(BUILD_TARGET firmware_${CMAKE_BUILD_TYPE} CACHE STRING "")
 
 add_executable(${BUILD_TARGET}
-    startup.c
     main.c
+)
+
+target_link_libraries(${BUILD_TARGET} PRIVATE
+    stm32f1xx_hal_driver
+    freertos_kernel
 )
 
 target_compile_options(${BUILD_TARGET} PRIVATE

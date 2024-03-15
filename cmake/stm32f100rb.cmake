@@ -9,10 +9,10 @@ FetchContent_Declare(
   STM32_HAL_Driver
   GIT_REPOSITORY https://github.com/STMicroelectronics/stm32f1xx_hal_driver.git
   GIT_TAG v1.1.9
-  SOURCE_DIR ${CMAKE_SOURCE_DIR}/hal/STM32_HAL_Driver
+  SOURCE_DIR ${CMAKE_SOURCE_DIR}/hal/stm32f1xx_hal_driver
 )
 
-FetchContent_MakeAvailable(STM32_HAL_Driver)
+FetchContent_MakeAvailable(STM32_HAL_DRIVER)
 
 FetchContent_Declare(
   STM32_CMSIS_Device
